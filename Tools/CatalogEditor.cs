@@ -20,17 +20,22 @@ namespace LcDevPack_TeamDamonA.Tools
         private readonly string User = CatalogEditor.connection.ReadSettings("User");
         private readonly string Password = CatalogEditor.connection.ReadSettings("Password");
         private readonly string Database = CatalogEditor.connection.ReadSettings("Database");
+        private readonly string language = CatalogEditor.connection.ReadSettings("Language"); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
         private readonly DatabaseHandle databaseHandle = new DatabaseHandle();
         public string rowName = "a_ctid";
         public string CategoryHide = "0";
         public string SortCategoryValue = "-1";
         public string SwitchCheckBox = "-1";
         public int enabled = 1;
-        public string[] menuArray = new string[2]
+        // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+        public string ct_string_lang = "usa"; // Default USA
+        public string[] menuArray = { };
+        /*public string[] menuArray = new string[2]
         {
-      "a_ctid",
-      "a_ctname"
-        };
+            "a_ctid",
+            "a_ctname"
+        };*/
+        // NICOLASG MARK END
         private int tmpFlag = 0;
         private int tmpLimit = 0;
         private readonly ExportLodHandle exportLodHandle = new ExportLodHandle();
@@ -117,36 +122,87 @@ namespace LcDevPack_TeamDamonA.Tools
         private CheckBox cbshowEnabled;
         private ToolTip toolTip1;
         private TextBox tbLimit;
-
+        
         public CatalogEditor()
         {
+            // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+            if (language == "USA")
+            {
+                ct_string_lang = "usa";
+            }
+            else if (language == "POL")
+            {
+                ct_string_lang = "pld";
+            }
+            else if (language == "BRA")
+            {
+                ct_string_lang = "brz";
+            }
+            else if (language == "RUS")
+            {
+                ct_string_lang = "rus";
+            }
+            else if (language == "FRA")
+            {
+                ct_string_lang = "frc";
+            }
+            else if (language == "ESP")
+            {
+                ct_string_lang = "spn";
+            }
+            else if (language == "ESP")
+            {
+                ct_string_lang = "spn";
+            }
+            else if (language == "MEX")
+            {
+                ct_string_lang = "mex";
+            }
+            else if (language == "THA")
+            {
+                ct_string_lang = "tld";
+            }
+            else if (language == "ITA")
+            {
+                ct_string_lang = "ita";
+            }
+            else if (language == "GER")
+            {
+                ct_string_lang = "ger";
+            }
+        // NICOLASG MARK END
+
             InitializeComponent();
         }
 
         public void SearchList(string searchString)
         {
             searchString = searchString.Replace("\\", "\\\\").Replace("'", "\\'");
-            listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_ctname LIKE '%" + searchString + "%' ORDER BY a_ctid;");
+            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+            listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_ctname_" + ct_string_lang + " LIKE '%" + searchString + "%' ORDER BY a_ctid;");  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_ctname LIKE '%" + searchString + "%' ORDER BY a_ctid;");
         }
 
         public void SortCategory(string category)
         {
-            listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_category ='" + category + "'");
+            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+            listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_category ='" + category + "'");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_category ='" + category + "'");
         }
         public void SortEnabled_Catagory(string category, int enabled)
         {
-            listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_category ='" + category + "'" + "AND a_enable =' " + enabled + "'");
-
+            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+            listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_category ='" + category + "'" + "AND a_enable =' " + enabled + "'");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_category ='" + category + "'" + "AND a_enable =' " + enabled + "'");
         }
         public void LoadListBox()
         {
             if (cbshowEnabled.Checked == true)
             {
-                listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_enable = '" + enabled + "'" + " ORDER BY a_ctid;");
+                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+                listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_enable = '" + enabled + "'" + " ORDER BY a_ctid;");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_enable = '" + enabled + "'" + " ORDER BY a_ctid;");
             }
             else
             {
-                listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog ORDER BY a_ctid;");
+                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+                listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog ORDER BY a_ctid;");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog ORDER BY a_ctid;");
             }
         }
         public Bitmap CropImage(Bitmap source, Rectangle section)
@@ -251,12 +307,12 @@ namespace LcDevPack_TeamDamonA.Tools
             string[] strArray = databaseHandle.SelectMySqlReturnArray(Host, User, Password, Database, " select * from t_catalog WHERE a_ctid ='" + textBox1.Text + "';", new string[11]
             {
         "a_ctid",
-        "a_ctname",
+        "a_ctname_" + ct_string_lang, // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: "a_ctname",
         "a_category",
         "a_type",
         "a_subtype",
         "a_cash",
-        "a_ctdesc",
+        "a_ctdesc_" + ct_string_lang, // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: "a_ctdesc",
         "a_mileage",
         "a_enable",
         "a_flag",
@@ -294,6 +350,7 @@ namespace LcDevPack_TeamDamonA.Tools
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "INSERT INTO t_catalog DEFAULT VALUES");
             //Catalog Modification Dethunter12 -t_catalog_1 - t_catalog_1_hardcore
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "INSERT INTO t_catalog_1 DEFAULT VALUES"); //dethunter12 add
+            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
         }
@@ -307,6 +364,7 @@ namespace LcDevPack_TeamDamonA.Tools
             //catalog Modification Dethunter12 Delete t_ct_item-t_ct_item_1
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "DELETE FROM t_ct_item WHERE a_ctid = '" + textBox1.Text + "'");
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "DELETE FROM t_ct_item_1 WHERE a_ctid = '" + textBox1.Text + "'"); //dethunter12 add
+            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
             listBox1.SelectedIndex = selectedIndex - 1;
             int num5 = (int)new CustomMessage("Deleted").ShowDialog();
@@ -406,8 +464,8 @@ namespace LcDevPack_TeamDamonA.Tools
         private void button2_Click(object sender, EventArgs e)
         {
             //dethunter12 add t_catalog_1 - t_catalog_hardcore
-            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
-            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog_1 SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
+            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog SET " + "a_ctname_" + ct_string_lang + " = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc_" + ct_string_lang + " = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'"); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
+            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog_1 SET " + "a_ctname_" + ct_string_lang + " = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc_" + ct_string_lang + " = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'"); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog_1 SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
             int selectedIndex = listBox1.SelectedIndex;
             if (textBox12.Text != "")
             {
@@ -416,8 +474,8 @@ namespace LcDevPack_TeamDamonA.Tools
 
             else if (SortCategoryValue == "-1")
             {
+                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
                 listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
-
             }
             else
             {
@@ -1658,7 +1716,7 @@ namespace LcDevPack_TeamDamonA.Tools
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CatalogEditor";
-            this.Text = "Catalog Editor v1.05 (Modified by Dethunter12 & Maykom)";
+            this.Text = "Catalog Editor v1.05 (Modified by Dethunter12 & Maykom | Re-Modified by NicolasG)";
             this.Load += new System.EventHandler(this.Exporter_Catalog_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1727,8 +1785,8 @@ namespace LcDevPack_TeamDamonA.Tools
         private void btnSaveAndNext_Click(object sender, EventArgs e)
         {
             //dethunter12 add t_catalog_1 - t_catalog_hardcore
-            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
-            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog_1 SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
+            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog SET " + "a_ctname_" + ct_string_lang + " = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc_" + ct_string_lang + " = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
+            databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog_1 SET " + "a_ctname_" + ct_string_lang + " = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc_" + ct_string_lang + " = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'"); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: databaseHandle.SendQueryMySql(Host, User, Password, Database, "UPDATE t_catalog_1 SET " + "a_ctname = '" + textBox2.Text.Replace("'", "\\'") + "', " + "a_category = '" + textBox3.Text + "', " + "a_type = '" + textBox4.Text + "', " + "a_subtype = '" + textBox5.Text + "', " + "a_cash = '" + textBox6.Text + "', " + "a_ctdesc = '" + textBox7.Text.Replace("'", "\\'") + "', " + "a_mileage = '" + textBox8.Text + "', " + "a_enable = '" + textBox9.Text + "', " + "a_flag = '" + textBox10.Text + "', " + "a_icon = '" + textBox11.Text + "' " + "WHERE a_ctid = '" + textBox1.Text + "'");
 
             int selectedIndex = listBox1.SelectedIndex;
             int nextselected = listBox1.SelectedIndex + 1;
@@ -1740,8 +1798,8 @@ namespace LcDevPack_TeamDamonA.Tools
 
             else if (SortCategoryValue == "-1")
             {
+                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
                 listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
-
             }
 
             else

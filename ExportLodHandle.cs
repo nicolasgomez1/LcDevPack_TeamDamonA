@@ -21,6 +21,7 @@ namespace LcDevPack_TeamDamonA
         private readonly string User = ExportLodHandle.connection.ReadSettings("User");
         private readonly string Password = ExportLodHandle.connection.ReadSettings("Password");
         private readonly string Database = ExportLodHandle.connection.ReadSettings("Database");
+        private readonly string language = ExportLodHandle.connection.ReadSettings("Language"); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
         private readonly DatabaseHandle databaseHandle = new DatabaseHandle();
         private readonly MessageHandle messageHandle = new MessageHandle();
         public static Connection connection = new Connection();
@@ -1444,9 +1445,57 @@ namespace LcDevPack_TeamDamonA
 
         public void ExportCatalog_V4()
         {
+            // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
+            string ct_string_lang = "usa"; // Default USA
+
+            if (language == "USA")
+            {
+                ct_string_lang = "usa";
+            }
+            else if (language == "POL")
+            {
+                ct_string_lang = "pld";
+            }
+            else if (language == "BRA")
+            {
+                ct_string_lang = "brz";
+            }
+            else if (language == "RUS")
+            {
+                ct_string_lang = "rus";
+            }
+            else if (language == "FRA")
+            {
+                ct_string_lang = "frc";
+            }
+            else if (language == "ESP")
+            {
+                ct_string_lang = "spn";
+            }
+            else if (language == "ESP")
+            {
+                ct_string_lang = "spn";
+            }
+            else if (language == "MEX")
+            {
+                ct_string_lang = "mex";
+            }
+            else if (language == "THA")
+            {
+                ct_string_lang = "tld";
+            }
+            else if (language == "ITA")
+            {
+                ct_string_lang = "ita";
+            }
+            else if (language == "GER")
+            {
+                ct_string_lang = "ger";
+            }
+            // NICOLASG MARK END
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "File catalog.lod|catalog*.lod";
-            saveFileDialog.FileName = "catalog.lod";
+            saveFileDialog.Filter = "File catalog_.lod|catalog_*.lod";        // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: saveFileDialog.Filter = "File catalog.lod|catalog*.lod";
+            saveFileDialog.FileName = "catalog_" + ct_string_lang+ ".lod";  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: saveFileDialog.FileName = "catalog.lod";
             saveFileDialog.Title = "Save catalog.lod file";
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
@@ -1480,14 +1529,14 @@ namespace LcDevPack_TeamDamonA
                 int ordinal6 = mySqlDataReader1.GetOrdinal("a_enable");
                 string str2 = mySqlDataReader1.GetString(ordinal6);
                 binaryWriter.Write(Convert.ToByte(str2));
-                int ordinal7 = mySqlDataReader1.GetOrdinal("a_ctname");
+                int ordinal7 = mySqlDataReader1.GetOrdinal("a_ctname_" + ct_string_lang); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: int ordinal7 = mySqlDataReader1.GetOrdinal("a_ctname");
                 string s6 = mySqlDataReader1.GetString(ordinal7);
-                binaryWriter.Write(Encoding.UTF8.GetBytes(s6).Length);
-                binaryWriter.Write(Encoding.UTF8.GetBytes(s6));
-                int ordinal8 = mySqlDataReader1.GetOrdinal("a_ctdesc");
+                binaryWriter.Write(Encoding.Default.GetBytes(s6).Length); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: binaryWriter.Write(Encoding.UTF8.GetBytes(s6).Length);
+                binaryWriter.Write(Encoding.Default.GetBytes(s6));        // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: binaryWriter.Write(Encoding.UTF8.GetBytes(s6));
+                int ordinal8 = mySqlDataReader1.GetOrdinal("a_ctdesc_" + ct_string_lang); // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: int ordinal8 = mySqlDataReader1.GetOrdinal("a_ctdesc");
                 string s7 = mySqlDataReader1.GetString(ordinal8);
-                binaryWriter.Write(Encoding.UTF8.GetBytes(s7).Length);
-                binaryWriter.Write(Encoding.UTF8.GetBytes(s7));
+                binaryWriter.Write(Encoding.Default.GetBytes(s7).Length);  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: binaryWriter.Write(Encoding.UTF8.GetBytes(s7).Length);
+                binaryWriter.Write(Encoding.Default.GetBytes(s7));           // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: binaryWriter.Write(Encoding.UTF8.GetBytes(s7));
                 int num2 = databaseHandle.CountByRow(Host, User, Password, Database, "SELECT COUNT(*) FROM t_ct_item WHERE a_ctid ='" + s1 + "'");
                 binaryWriter.Write(num2);
                 string str3 = "SELECT * FROM t_ct_item WHERE a_ctid='" + s1 + "' ORDER BY a_index";
