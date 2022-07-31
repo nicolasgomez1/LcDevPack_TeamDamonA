@@ -29,7 +29,7 @@ namespace LcDevPack_TeamDamonA.Tools
         public int enabled = 1;
         // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
         public string ct_string_lang = "usa"; // Default USA
-        public string[] menuArray = { };
+        public string[] menuArray = new string[2];
         /*public string[] menuArray = new string[2]
         {
             "a_ctid",
@@ -150,10 +150,6 @@ namespace LcDevPack_TeamDamonA.Tools
             {
                 ct_string_lang = "spn";
             }
-            else if (language == "ESP")
-            {
-                ct_string_lang = "spn";
-            }
             else if (language == "MEX")
             {
                 ct_string_lang = "mex";
@@ -170,7 +166,10 @@ namespace LcDevPack_TeamDamonA.Tools
             {
                 ct_string_lang = "ger";
             }
-        // NICOLASG MARK END
+
+            menuArray[0] = "a_ctid";
+            menuArray[1] = "a_ctname_"+ ct_string_lang;
+            // NICOLASG MARK END
 
             InitializeComponent();
         }
@@ -178,30 +177,25 @@ namespace LcDevPack_TeamDamonA.Tools
         public void SearchList(string searchString)
         {
             searchString = searchString.Replace("\\", "\\\\").Replace("'", "\\'");
-            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_ctname_" + ct_string_lang + " LIKE '%" + searchString + "%' ORDER BY a_ctid;");  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_ctname LIKE '%" + searchString + "%' ORDER BY a_ctid;");
         }
 
         public void SortCategory(string category)
         {
-            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_category ='" + category + "'");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_category ='" + category + "'");
         }
         public void SortEnabled_Catagory(string category, int enabled)
         {
-            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_category ='" + category + "'" + "AND a_enable =' " + enabled + "'");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_category ='" + category + "'" + "AND a_enable =' " + enabled + "'");
         }
         public void LoadListBox()
         {
             if (cbshowEnabled.Checked == true)
             {
-                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
                 listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog WHERE a_enable = '" + enabled + "'" + " ORDER BY a_ctid;");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog WHERE a_enable = '" + enabled + "'" + " ORDER BY a_ctid;");
             }
             else
             {
-                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
                 listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname_" + ct_string_lang + " from t_catalog ORDER BY a_ctid;");   // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS) OG: listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select a_ctid, a_ctname from t_catalog ORDER BY a_ctid;");
             }
         }
@@ -350,7 +344,6 @@ namespace LcDevPack_TeamDamonA.Tools
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "INSERT INTO t_catalog DEFAULT VALUES");
             //Catalog Modification Dethunter12 -t_catalog_1 - t_catalog_1_hardcore
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "INSERT INTO t_catalog_1 DEFAULT VALUES"); //dethunter12 add
-            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
         }
@@ -364,7 +357,6 @@ namespace LcDevPack_TeamDamonA.Tools
             //catalog Modification Dethunter12 Delete t_ct_item-t_ct_item_1
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "DELETE FROM t_ct_item WHERE a_ctid = '" + textBox1.Text + "'");
             databaseHandle.SendQueryMySql(Host, User, Password, Database, "DELETE FROM t_ct_item_1 WHERE a_ctid = '" + textBox1.Text + "'"); //dethunter12 add
-            string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
             listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
             listBox1.SelectedIndex = selectedIndex - 1;
             int num5 = (int)new CustomMessage("Deleted").ShowDialog();
@@ -474,7 +466,6 @@ namespace LcDevPack_TeamDamonA.Tools
 
             else if (SortCategoryValue == "-1")
             {
-                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
                 listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
             }
             else
@@ -1798,7 +1789,6 @@ namespace LcDevPack_TeamDamonA.Tools
 
             else if (SortCategoryValue == "-1")
             {
-                string[] menuArray = new string[2] { "a_ctid", "a_ctname_" + ct_string_lang };  // NICOLASG MARK (EXPORT CATALOG IN DIFFERENTS LANGS)
                 listBox1.DataSource = databaseHandle.SelectMySqlReturnList(menuArray, Host, User, Password, Database, "select * from t_catalog ORDER BY a_ctid;");
             }
 

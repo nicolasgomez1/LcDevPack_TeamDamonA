@@ -1472,10 +1472,6 @@ namespace LcDevPack_TeamDamonA
             {
                 ct_string_lang = "spn";
             }
-            else if (language == "ESP")
-            {
-                ct_string_lang = "spn";
-            }
             else if (language == "MEX")
             {
                 ct_string_lang = "mex";
